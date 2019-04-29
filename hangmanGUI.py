@@ -2,6 +2,13 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 
+''' Define Variables '''
+secret = ""
+secret_low = ""
+hidden_secret = ""
+hidden_secret_lst = []
+guess = ""
+
 ''' Defing Funcions '''
 def new_game():
     secret_entry['state'] = 'disabled'
@@ -13,12 +20,12 @@ def new_game():
     sec_submit_btn['state'] = 'normal'
 
 def add_secret():
+    global secret, hidden_secret, secret_low, hidden_secret_lst
     secret = secret_entry.get()
-    hidden_secret = ""
-    hidden_secret_lst = []
     if len(secret) < 1:
         messagebox.showwarning("Phrase Entry","Make sure you added something in the phrase box.")
     elif len(secret) >= 1:
+        secret_low = secret.lower()
         for char in secret:
             if char != " ":
                 hidden_secret_lst += "-"
@@ -26,6 +33,8 @@ def add_secret():
             else:
                 hidden_secret_lst += " "
                 hidden_secret += " "
+        print(hidden_secret,hidden_secret_lst)
+        print(secret, secret_low)
         secret_entry.delete(0, "end")
         secret_entry['state'] = 'disabled'
         sec_submit_btn['state'] = 'disabled'
@@ -39,12 +48,17 @@ def add_secret():
         turns_left_lbvar.set(turns_left_var)
 
 def submit_guess():
-    pass
-    # TODO: add the submit guess thing
+    global secret, hidden_secret, secret_low, hidden_secret_lst,guess
+    guess = guess_entry.get()
+    if guess.lower() == secret_low:
+        print('Game Won: {0}'.format(secret))
+    
+    # TODO: do more things
+    
 
 def exit_app():
     exit_yn = messagebox.askyesno("Hangman","Would you like to exit?")
-    if exit_yn == True:
+    if exit_yn:
         root.quit()
 
 root = Tk()
