@@ -5,6 +5,7 @@ from tkinter import messagebox
 ''' Define Variables '''
 secret = ""
 secret_low = ""
+secret_lst = []
 hidden_secret = ""
 hidden_secret_lst = []
 guess = ""
@@ -20,12 +21,20 @@ def new_game():
     sec_submit_btn['state'] = 'normal'
 
 def add_secret():
-    global secret, hidden_secret, secret_low, hidden_secret_lst
+    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst
+    secret = ""
+    secret_low = ""
+    secret_lst = []
+    hidden_secret = ""
+    hidden_secret_lst = []
     secret = secret_entry.get()
-    if len(secret) < 1:
+    if len(secret) < 1  or secret.isspace():
         messagebox.showwarning("Phrase Entry","Make sure you added something in the phrase box.")
+        secret_entry.delete(0, "end")
     elif len(secret) >= 1:
         secret_low = secret.lower()
+        secret_lst = [x for x in secret_low]
+        print(secret_lst)
         for char in secret:
             if char != " ":
                 hidden_secret_lst += "-"
@@ -48,11 +57,18 @@ def add_secret():
         turns_left_lbvar.set(turns_left_var)
 
 def submit_guess():
-    global secret, hidden_secret, secret_low, hidden_secret_lst,guess
+    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst,guess
     guess = guess_entry.get()
+    if guess.isspace():
+        messagebox.showwarning("Guess Entry","You can't guess spaces.")
+    guess_low = guess.lower()
+    print(guess)
+    if guess_low in secret_lst:
+        print(guess + ' is in the secret')
     if guess.lower() == secret_low:
         print('Game Won: {0}'.format(secret))
-    
+        messagebox.showinfo("Hangman Game","You won! The phrase was " + secret)
+    guess_entry.delete(0, "end")
     # TODO: do more things
     
 
