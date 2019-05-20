@@ -52,9 +52,9 @@ def add_secret():
         guess_submit_btn['state'] = 'normal'
         hint_var = "Hint: " + hidden_secret
         hidden_secret_lbvar.set(hint_var)
-        turns = 6
-        turns_left_var = "You have " + str(turns) + " turns left."
-        turns_left_lbvar.set(turns_left_var)
+        tries = 6
+        tries_left_var = "You have " + str(tries) + " tries left."
+        tries_left_lbvar.set(tries_left_var)
 
 def submit_guess():
     global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst,guess
@@ -62,12 +62,15 @@ def submit_guess():
     if guess.isspace():
         messagebox.showwarning("Guess Entry","You can't guess spaces.")
     guess_low = guess.lower()
+    if guess_low == secret_low:
+        print('Game Won: {0}'.format(secret))
+        messagebox.showinfo("Hangman Game","You won! The phrase was " + secret)
+    if guess_low not in secret_low:
+        # TODO: Do things here
+       print(guess + ' is not in the secret')
     print(guess)
     if guess_low in secret_lst:
         print(guess + ' is in the secret')
-    if guess.lower() == secret_low:
-        print('Game Won: {0}'.format(secret))
-        messagebox.showinfo("Hangman Game","You won! The phrase was " + secret)
     guess_entry.delete(0, "end")
     # TODO: do more things
     
@@ -84,7 +87,7 @@ root.resizable(width=False,height=False)
 ''' Variable Setup '''
 prev_guessed_lbvar = StringVar()
 hidden_secret_lbvar = StringVar()
-turns_left_lbvar = StringVar()
+tries_left_lbvar = StringVar()
 
 ''' Menu Toolbar '''
 # ----- Main Menu -----
@@ -119,10 +122,10 @@ sec_submit_btn.grid(row=0,column=2,sticky=W)
 # ----- Player Info GUI -----
 prev_guessed_lbl = Label(root,textvar=prev_guessed_lbvar,fg="black")
 hidden_secret_lbl = Label(root,textvar=hidden_secret_lbvar)
-turns_left_lbl = Label(root,textvar=turns_left_lbvar)
+tries_left_lbl = Label(root,textvar=tries_left_lbvar)
 prev_guessed_lbl.grid(row=1,column=0,columnspan=2)
 hidden_secret_lbl.grid(row=2,column=0,columnspan=2)
-turns_left_lbl.grid(row=3,column=0,columnspan=2)
+tries_left_lbl.grid(row=3,column=0,columnspan=2)
 
 # ----- Player Guess Entry GUI -----
 Label(root,text="Enter Guess:").grid(row=4,column=0,sticky=E)
@@ -136,4 +139,5 @@ guess_submit_btn.grid(row=4,column=2,sticky=W)
 ''' Config and start app '''
 root.title("Hangman")
 root.config(menu=main_menu)
+root.iconbitmap(r'C:\Users\maloneypatrick08\Documents\GitHub\Hangman-GUI\hangman_icon.ico')
 root.mainloop()
