@@ -1,6 +1,21 @@
+"""
+Copyright (C) 2019 Patrick Maloney
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
+
 
 ''' Define Variables '''
 secret = ""
@@ -9,19 +24,30 @@ secret_lst = []
 hidden_secret = ""
 hidden_secret_lst = []
 guess = ""
+tries = 6
+tries_left_var = "You have " + str(tries) + " tries left."
+prev_guessed = []
 
 ''' Defing Funcions '''
 def new_game():
-    secret_entry['state'] = 'disabled'
-    sec_submit_btn['state'] = 'disabled'
+    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst, tries, guess, tries_left_var
     guess_entry['state'] = 'disabled'
     guess_submit_btn['state'] = 'disabled'
     messagebox.showinfo("Hangman Instructions","First, enter the secret phrase in the first box. Then, have a second person enter their guess in the second box.")
     secret_entry['state'] = 'normal'
     sec_submit_btn['state'] = 'normal'
+    secret = ""
+    secret_low = ""
+    secret_lst = []
+    hidden_secret = ""
+    hidden_secret_lst = []
+    guess = ""
+    tries =   6
+    tries_left_var = "You have " + str(tries) + " tries left."
+    tries_left_lbvar.set(tries_left_var)
 
 def add_secret():
-    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst
+    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst, tries
     secret = ""
     secret_low = ""
     secret_lst = []
@@ -52,12 +78,10 @@ def add_secret():
         guess_submit_btn['state'] = 'normal'
         hint_var = "Hint: " + hidden_secret
         hidden_secret_lbvar.set(hint_var)
-        tries = 6
-        tries_left_var = "You have " + str(tries) + " tries left."
-        tries_left_lbvar.set(tries_left_var)
+        
 
 def submit_guess():
-    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst,guess
+    global secret, secret_lst, hidden_secret, secret_low, hidden_secret_lst, guess, tries, tries_left_var
     guess = guess_entry.get()
     if guess.isspace():
         messagebox.showwarning("Guess Entry","You can't guess spaces.")
@@ -66,8 +90,16 @@ def submit_guess():
         print('Game Won: {0}'.format(secret))
         messagebox.showinfo("Hangman Game","You won! The phrase was " + secret)
     if guess_low not in secret_low:
-        # TODO: Do things here
-       print(guess + ' is not in the secret')
+        if tries == 1:
+            messagebox.showinfo("Hangman Game", "You lost. The phrase was " + secret)
+            guess_entry.delete(0, "end")
+            tries -= 1
+            new_game()
+        else:
+            tries -= 1
+        tries_left_var = "You have " + str(tries) + " tries left."
+        tries_left_lbvar.set(tries_left_var)
+        print(guess + ' is not in the secret')
     print(guess)
     if guess_low in secret_lst:
         print(guess + ' is in the secret')
