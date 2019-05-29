@@ -63,10 +63,10 @@ def add_secret():
         print(secret_lst)
         for char in secret:
             if char != " ":
-                hidden_secret_lst += "-"
+                hidden_secret_lst.append("-")
                 hidden_secret += "-"
             else:
-                hidden_secret_lst += " "
+                hidden_secret_lst.append(" ")
                 hidden_secret += " "
         print(hidden_secret,hidden_secret_lst)
         print(secret, secret_low)
